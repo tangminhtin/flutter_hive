@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hive/models/person.dart';
 import 'package:hive/hive.dart';
@@ -31,7 +33,15 @@ class _AddPersonFormState extends State<AddPersonForm> {
       country: _countryController.text,
     );
 
-    box.add(newPerson);
+    String personJson =
+        '{"name": "${newPerson.name}", "country": "${newPerson.country}"}';
+
+    /// Encode Base64
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+    String encodedNewPerson = stringToBase64.encode(personJson);
+    box.add(encodedNewPerson);
+
+    // box.add(newPerson);
     print('Info added to box!');
   }
 

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hive/models/person.dart';
 import 'package:flutter_hive/screens/add_screen.dart';
@@ -61,8 +63,21 @@ class _InfoScreenState extends State<InfoScreen> {
               itemCount: box.length,
               itemBuilder: (context, index) {
                 final currentBox = box;
-                final Person personData = currentBox.getAt(index);
 
+                /// Decode Base64
+                Codec<String, String> stringToBase64 = utf8.fuse(base64);
+                String decodedPersonJson =
+                    stringToBase64.decode(currentBox.getAt(index));
+
+                Map<String, dynamic> personJson =
+                    json.decode(decodedPersonJson);
+
+                final Person personData = Person(
+                  name: personJson['name'],
+                  country: personJson['country'],
+                );
+
+                // final Person personData = currentBox.getAt(index);
                 return InkWell(
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
